@@ -21,14 +21,14 @@ async def on_message(message):
 
     #recall 5 most recent terms
     if message.content == '!r' :
-        commands.recent()
+        commands.termSearch(commands.recent())
 
     #link to t&c
     if message.content == '!link' :
         await client.send_message(message.channel, 'http://bit.do/termcon')
 
     if message.content == '!help' :
-        commands.help()
+        commands.termSearch(commands.help())
 
 
 client.run('buymyasianbaby@gmail.com','suchpassword1')
