@@ -13,22 +13,22 @@ async def on_message(message):
 
     #reference term by number
     if message.content.startswith('!t '):
-        commands.term(message.content[3:])
+        await client.send_message(message.channel, commands.term(message.content[3:]))
 
     #search through terms
     if message.content.startswith('!ts '):
-        commands.termSearch(message.content[4:])
+        await client.send_message(message.channel, commands.termSearch(message.content[4:]))
 
     #recall 5 most recent terms
     if message.content == '!r' :
-        commands.termSearch(message.channel, commands.recent())
+        await client.send_message(message.channel,  commands.recent())
 
     #link to t&c
     if message.content == '!link' :
         await client.send_message(message.channel, 'http://bit.do/termcon')
 
     if message.content == '!help' :
-        commands.termSearch(message.channel,commands.help())
+        await client.send_message(message.channel, message.channel,commands.help())
 
 
 client.run('buymyasianbaby@gmail.com','suchpassword1')
