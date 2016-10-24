@@ -28,7 +28,7 @@ async def on_message(message):
         await client.send_message(message.channel, 'http://bit.do/termcon')
 
     if message.content == '!help' :
-        await client.send_message(message.channel, message.channel,commands.help())
+        await client.send_message(message.channel,commands.help())
 
 
 client.run('buymyasianbaby@gmail.com','suchpassword1')

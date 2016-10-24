@@ -27,13 +27,14 @@ def termSearch(msg):
     for entry in termlist:
         if msg.lower() in entry[1].lower() :
             searchlist.append(int(entry[0]))
+        print(len(searchlist))
         if len(searchlist) > 10:
             return ('Be more specific.')
         if len(searchlist) == 0:
             return ('No terms found.')
         for query in searchlist :
             output += ('Term number %i: %s \n' % (query,termdict[query]))
-            return output
+        return output
 
 def recent():
     i = 5
