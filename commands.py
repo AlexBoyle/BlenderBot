@@ -12,9 +12,9 @@ termdict = {}
 for entry in termlist:
     termdict[int(entry[0])] = entry[1]
 
-commandlist = [['!t', 'search term by number'],['!ts', 'search through terms using a keyword'],
+commandlist = [['!t', 'search term by number'],['!ts', 'search through terms using a keyword'],['!tr', 'get random term'],
     ['!r','recall the five most recent terms'],['!link','see the entire list'],['!ref','shows terms referenced by previously by me'],
-    ['!code','This bots sorce code']]
+    ['!code','this bots sorce code']']
 
 searchlist = []
 

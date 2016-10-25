@@ -4,7 +4,7 @@ import discord
 import asyncio
 import logging
 import commands
-
+import random
 
 client = discord.Client()
 
@@ -39,4 +39,6 @@ async def on_message(message):
     if message.content == '!ref':
         await client.send_message(message.channel, commands.reference())
 
+    if message.content == '!tr':
+         await client.send_message(message.channel, commands.term(str(random.randint(1,450))))
 client.run('buymyasianbaby@gmail.com','suchpassword1')
