@@ -2,43 +2,65 @@
  
 import discord
 import asyncio
-import logging
-import commands
 import random
+
+import TermCommands
+import PingCommands
+import VoteCommands
 
 client = discord.Client()
 
 @client.event
 async def on_message(message):
 
-    #reference term by number
+    #Terms and conditions commands
+    if message.content.startswith('!'):
+        await client.send_message(message.channel,terms(message))
+
+    #Ping Commands
+    if message.content.startswith('>'):
+        await client.send_message(message.channel,ping(message))
+
+    #Vote Commands
+    if message.content.startswith('%'):
+        await client.send_message(message.channel,vote(message))
+
+client.run('buymyasianbaby@gmail.com','suchpassword1')
+
+
+def terms(message):
+     #reference term by number
     if message.content.startswith('!t '):
-        await client.send_message(message.channel, commands.term(message.content[3:]))
+        return TermCommands.term(message.content[3:])
 
     #search through terms
     if message.content.startswith('!ts '):
-        await client.send_message(message.channel, commands.termSearch(message.content[4:]))
+        return TermCommands.termSearch(message.content[4:])
 
     #recall 5 most recent terms
     if message.content == '!r' :
-        await client.send_message(message.channel,  commands.recent())
+        return  TermCommands.recent()
 
     #link to t&c
     if message.content == '!link' :
-        await client.send_message(message.channel, 'http://bit.do/termcon')
+        return 'http://bit.do/termcon'
 
     #source code
     if message.content == '!code' :
-        await client.send_message(message.channel, 'https://github.com/AlexBoyle/Spicier_Bot')
+        return 'https://github.com/AlexBoyle/Spicier_Bot'
 
-    #pull up list of commands
+    #pull up list of TermCommands
     if message.content == '!help' :
-        await client.send_message(message.channel,commands.help())
+        return TermCommands.help()
 
     #gain all terms referenced
     if message.content == '!ref':
-        await client.send_message(message.channel, commands.reference())
-
+        return TermCommands.reference()
+    #Random term
     if message.content == '!tr':
-         await client.send_message(message.channel, commands.term(str(random.randint(1,len(commands.termlist)))))
-client.run('buymyasianbaby@gmail.com','suchpassword1')
+         return TermCommands.term(str(random.randint(1,len(TermCommands.termlist))))
+
+def vote(message):
+
+
+def ping(message):
