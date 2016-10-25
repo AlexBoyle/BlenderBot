@@ -27,8 +27,12 @@ async def on_message(message):
     if message.content == '!link' :
         await client.send_message(message.channel, 'http://bit.do/termcon')
 
+    #pull up list of commands
     if message.content == '!help' :
         await client.send_message(message.channel,commands.help())
 
+    #gain all terms referenced
+    if message.content.startswith('!ref '):
+        await client.send_message(message.channel, commands.reference(message.content[5:]))
 
 client.run('buymyasianbaby@gmail.com','suchpassword1')

@@ -48,3 +48,12 @@ def help():
     for entry in commandlist:
           output += ('Use "%s" to %s! \n' % (entry[0],entry[1]))
     return output
+def reference():
+    output = ""
+    referencelist = []
+    for query in searchlist:
+        if termdict[query][0] == "^":
+            output += ('Term number %i: %s \n' % ((query-1),termdict[query-1])
+        referencelist.append(query-1)
+    searchlist = referencelist[:]
+    return output
