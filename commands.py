@@ -16,7 +16,9 @@ commandlist = [['!t', 'search term by number'],['!ts', 'search through terms usi
     ['!r','recall the five most recent terms'],['!link','see the entire list']]
 
 searchlist = []
+
 def term(msg):
+    global searchlist
     searchlist = []
     if msg.isdigit():
         searchlist.append(int(msg))
@@ -24,6 +26,7 @@ def term(msg):
             return ('Term number %i: %s' % (int(msg),termdict[int(msg)]))
 
 def termSearch(msg):
+    global searchlist
     searchlist = []
     output = ""
     for entry in termlist:
@@ -51,12 +54,15 @@ def help():
           output += ('Use "%s" to %s! \n' % (entry[0],entry[1]))
     return output
 def reference():
+    global searchlist
     output = ""
-    referencelist = []
-    print (searchlist)
-    for query in searchlist:
-        if termdict[query][0] == "^":
+    templist = []
+    referencelist = searchlist[:]
+    for query in referencelist:
+         if termdict[query][0] == "^" :
             output += ('Term number %i: %s \n' % ((query-1),termdict[query-1]))
-            referencelist.append(query-1)
-    searchlist = referencelist[:]
+            templist.append(query-1)
+    searchlist = templist[:]
+    if(output == ""):
+        return "No Refrences"
     return output
