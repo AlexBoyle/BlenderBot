@@ -40,5 +40,5 @@ async def on_message(message):
         await client.send_message(message.channel, commands.reference())
 
     if message.content == '!tr':
-         await client.send_message(message.channel, commands.term(str(random.randint(1,450))))
+         await client.send_message(message.channel, commands.term(str(random.randint(1,len(commands.termlist)))))
 client.run('buymyasianbaby@gmail.com','suchpassword1')
