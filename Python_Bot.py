@@ -64,3 +64,8 @@ def vote(message):
 
 
 def ping(message):
+    if message.content.strip() == ">ly":
+        return PingCommands.leagueYes()
+ 
+    if message.content.strip() == ">ln":
+        return PingCommands.leagueNo()
