@@ -13,7 +13,8 @@ for entry in termlist:
     termdict[int(entry[0])] = entry[1]
 
 commandlist = [['!t', 'search term by number'],['!ts', 'search through terms using a keyword'],
-    ['!r','recall the five most recent terms'],['!link','see the entire list']]
+    ['!r','recall the five most recent terms'],['!link','see the entire list'],['!ref','shows terms referenced by previously by me'],
+    ['!code','This bots sorce code']]
 
 searchlist = []
 
@@ -53,6 +54,7 @@ def help():
     for entry in commandlist:
           output += ('Use "%s" to %s! \n' % (entry[0],entry[1]))
     return output
+
 def reference():
     global searchlist
     output = ""
@@ -64,5 +66,5 @@ def reference():
             templist.append(query-1)
     searchlist = templist[:]
     if(output == ""):
-        return "No Refrences"
+        return "There is nothing to reference."
     return output

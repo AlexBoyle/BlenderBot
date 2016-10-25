@@ -27,6 +27,10 @@ async def on_message(message):
     if message.content == '!link' :
         await client.send_message(message.channel, 'http://bit.do/termcon')
 
+    #source code
+    if message.content == '!code' :
+        await client.send_message(message.channel, 'https://github.com/AlexBoyle/Spicier_Bot')
+
     #pull up list of commands
     if message.content == '!help' :
         await client.send_message(message.channel,commands.help())
