@@ -15,9 +15,11 @@ for entry in termlist:
 commandlist = [['!t', 'search term by number'],['!ts', 'search through terms using a keyword'],
     ['!r','recall the five most recent terms'],['!link','see the entire list']]
 
-
+searchlist = []
 def term(msg):
+    searchlist = []
     if msg.isdigit():
+        searchlist.append(int(msg))
         if int(msg) <= len(termlist):
             return ('Term number %i: %s' % (int(msg),termdict[int(msg)]))
 
@@ -51,9 +53,10 @@ def help():
 def reference():
     output = ""
     referencelist = []
+    print (searchlist)
     for query in searchlist:
         if termdict[query][0] == "^":
-            output += ('Term number %i: %s \n' % ((query-1),termdict[query-1])
-        referencelist.append(query-1)
+            output += ('Term number %i: %s \n' % ((query-1),termdict[query-1]))
+            referencelist.append(query-1)
     searchlist = referencelist[:]
     return output

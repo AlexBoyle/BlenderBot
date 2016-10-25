@@ -32,7 +32,7 @@ async def on_message(message):
         await client.send_message(message.channel,commands.help())
 
     #gain all terms referenced
-    if message.content.startswith('!ref '):
-        await client.send_message(message.channel, commands.reference(message.content[5:]))
+    if message.content == '!ref':
+        await client.send_message(message.channel, commands.reference())
 
 client.run('buymyasianbaby@gmail.com','suchpassword1')
