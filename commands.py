@@ -58,13 +58,19 @@ def help():
 def reference():
     global searchlist
     output = ""
-    templist = []
-    referencelist = searchlist[:]
-    for query in referencelist:
-         if termdict[query][0] == "^" :
+    referencelist = []
+    for query in searchlist:
+        if termdict[query][0] == "^" :
             output += ('Term number %i: %s \n' % ((query-1),termdict[query-1]))
-            templist.append(query-1)
-    searchlist = templist[:]
-    if(output == ""):
+            referencelist.append(query-1)
+        if "see: ".lower() in termdict[query].lower():
+            refstring = ""
+            reflocation = termdict[query].find("see: ")
+            for i in termdict[query][(reflocation+4):]:
+                if i.isdigit():
+                    refstring += i
+            output += ('Term number %i: %s \n' % ((int(refstring),termdict[int(refstring)])))       
+    searchlist = referencelist[:]
+    if output == "":
         return "There is nothing to reference."
     return output
