@@ -1,6 +1,6 @@
 from time import time
  
-LeagueInitiator = ""
+LeagueInitiator = ("",0)
  
 def leagueCheck():
     if message.content.strip() == "@Does anyone want to play League?".strip() :
@@ -8,9 +8,9 @@ def leagueCheck():
    
 def leagueYes():
     output = ""
-    if time() > LeagueInitiator[1] + 1800:
+    if LeagueInitiator[0] == "":
         output += 'There has not been a recent @League ping.'
-    if LeagueInitiator == "":
+    if time() > LeagueInitiator[1] + 1800:
         output += 'There has not been a recent @League ping.'
     else:
         output += '@%s Yes, I would very much enjoy playing League of Legends!' % (LeagueInitiator[0])
@@ -18,9 +18,9 @@ def leagueYes():
        
 def leagueNo():
     output = ""
-    if time() > LeagueInitiator[1] + 1800:
+    if LeagueInitiator[0] == "":
         output += 'There has not been a recent @League ping.'
-    if LeagueInitiator == "":
+    if time() > LeagueInitiator[1] + 1800:
         output += 'There has not been a recent @League ping.'
     else:
         output += '@%s Unfortunately, I cannot play this round.' % (LeagueInitiator[0])
