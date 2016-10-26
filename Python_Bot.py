@@ -64,14 +64,20 @@ async def on_message(message):
 
     #Terms and conditions commands
     if message.content.startswith('!'):
-        await client.send_message(message.channel,terms(message))
+        out = terms(message)
+        if out != None:
+            await client.send_message(message.channel,out)
  
     #Ping Commands
     if message.content.startswith('>'):
-        await client.send_message(message.channel,ping(message))
+        out = ping(message)
+        if out != None:
+            await client.send_message(message.channel,out)
  
     #Vote Commands
     if message.content.startswith('%'):
-        await client.send_message(message.channel,vote(message))
+        out = vote(message)
+        if out != None:
+            await client.send_message(message.channel,out)
  
 client.run('buymyasianbaby@gmail.com','suchpassword1')
