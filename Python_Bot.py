@@ -8,24 +8,7 @@ import TermCommands
 import PingCommands
 import VoteCommands
  
-client = discord.Client()
- 
-@client.event
-async def on_message(message):
- 
-    #Terms and conditions commands
-    if message.content.startswith('!'):
-        await client.send_message(message.channel,terms(message))
- 
-    #Ping Commands
-    if message.content.startswith('>'):
-        await client.send_message(message.channel,ping(message))
- 
-    #Vote Commands
-    if message.content.startswith('%'):
-        await client.send_message(message.channel,vote(message))
- 
-client.run('buymyasianbaby@gmail.com','suchpassword1')
+
  
  
 def terms(message):
@@ -61,12 +44,32 @@ def terms(message):
     if message.content == '!tr':
          return TermCommands.term(str(random.randint(1,len(TermCommands.termlist))))
  
-def vote(message):
+#def vote(message):
  
  
 def ping(message):
     if message.content.strip() == ">ly":
-        await client.send_message(message.channel, PingCommands.leagueYes())
+        return PingCommands.leagueYes())
  
     if message.content.strip() == ">ln":
-        await client.send_message(message.channel, PingCommands.leagueNo())
+        return PingCommands.leagueNo())
+
+
+client = discord.Client()
+ 
+@client.event
+async def on_message(message):
+ 
+    #Terms and conditions commands
+    if message.content.startswith('!'):
+        await client.send_message(message.channel,terms(message))
+ 
+    #Ping Commands
+    if message.content.startswith('>'):
+        await client.send_message(message.channel,ping(message))
+ 
+    #Vote Commands
+    if message.content.startswith('%'):
+        await client.send_message(message.channel,vote(message))
+ 
+client.run('buymyasianbaby@gmail.com','suchpassword1')
