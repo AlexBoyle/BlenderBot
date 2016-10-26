@@ -45,21 +45,23 @@ def terms(message):
          return TermCommands.term(str(random.randint(1,len(TermCommands.termlist))))
  
 #def vote(message):
- 
- 
+
+
 def ping(message):
     if message.content.strip() == ">ly":
         return PingCommands.leagueYes()
- 
+
     if message.content.strip() == ">ln":
         return PingCommands.leagueNo()
 
-
+    if message.content.strip() == ">league":
+        return PingCommands.league(message)
 client = discord.Client()
  
 @client.event
 async def on_message(message):
- 
+    print(message.content)
+
     #Terms and conditions commands
     if message.content.startswith('!'):
         await client.send_message(message.channel,terms(message))
