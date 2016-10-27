@@ -481,7 +481,7 @@ iv. This document is legally binding
 467. We will server mute you for arbitrary reasons
 468. ^You were probably asking for it
 469. We’re getting stream sniped! D:
-470 ^Like the time Nick was ddos [see:144]
+470. ^Like the time Nick was ddos [see:144]
 471. ^Apparently ddos is the past tense of ddos
 472. TF2 has a special place in our hearts
 473. Shoutout to games we don’t play anymore
