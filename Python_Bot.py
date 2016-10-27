@@ -9,7 +9,8 @@ import PingCommands
 import VoteCommands
 
 
-
+ping = []
+vote = []
 
 def terms(message):
      #reference term by number
@@ -45,30 +46,48 @@ def terms(message):
          return TermCommands.term(str(random.randint(1,len(TermCommands.termlist))))
 
 def vote(message):
+    global vote
+    i = 0
+    for e in  vote:
+       if e[0] == message.channel:
+            return None
+       i += 1
+    if i == len(vote):
+        vote.append([message.channel,VoteCommands.Vote()])
+
+
     if message.content.startswith("%vote "):
-        return VoteCommands.callVote(message)
+        return vote[i][1].callVote(message)
 
     if message.content.startswith("%v"):
-        return VoteCommands.vote(message)
+        return vote[i][1].vote(message)
 
     if message.content.startswith("%results"):
-        return VoteCommands.results()
+        return vote[i][1].results()
 
     if message.content.startswith("%clear"):
-        return VoteCommands.clear()
+        return vote[i][1].clear()
 
     if message.content.startswith("%help"):
-        return VoteCommands.help()
+        return vote[i][1].help()
 
 def ping(message):
+    global ping
+    i = 0
+    for e in  ping:
+       if e[0] == message.channel:
+            return None
+       i += 1
+    if i == len(ping):
+        ping.append([message.channel,PingCommands.Ping()])
     if message.content.strip() == ">ly":
-        return PingCommands.leagueYes()
+        return ping[i][1].leagueYes()
 
     if message.content.strip() == ">ln":
-        return PingCommands.leagueNo()
+        return ping[i][1].leagueNo()
 
     if message.content.strip() == ">league":
-        return PingCommands.league(message)
+        return ping[i][1].league(message)
 client = discord.Client()
  
 @client.event
