@@ -16,15 +16,15 @@ def terms(message):
     global terms
      #reference term by number
     if message.content.startswith('!t '):
-        return TermCommnads.term(message.content[3:])
+        return TermCommands.term(message.content[3:])
 
     #search through terms
     if message.content.startswith('!ts '):
-        return TermCommnads.termSearch(message.content[4:])
+        return TermCommands.termSearch(message.content[4:])
 
     #recall 5 most recent terms
     if message.content == '!r' :
-        return  TermCommnads.recent()
+        return  TermCommands.recent()
 
     #link to t&c
     if message.content == '!link' :
@@ -36,15 +36,15 @@ def terms(message):
 
     #pull up list of TermCommands
     if message.content == '!help' :
-        return TermCommnads.help()
+        return TermCommands.help()
 
     #Finds and prints all terms referenced in the last !ts or !t command
     if message.content == '!ref':
-        return TermCommnads.reference()
+        return TermCommands.reference()
 
     #Random term
     if message.content == '!tr':
-         return TermCommnads.term(str(random.randint(1,len(TermCommands.termlist))))
+         return TermCommands.term(str(random.randint(1,len(TermCommands.termlist))))
 
 def vote(message):
 
@@ -81,15 +81,15 @@ def ping(message):
             break
        i += 1
     if i == len(pingObj):
-        pingObj.append([message.channel,ping()])
+        pingObj.append([message.channel,PingCommands.ping()])
     if message.content.strip() == ">ly":
-        return ping[i][1].leagueYes()
+        return pingObj[i][1].leagueYes()
 
     if message.content.strip() == ">ln":
-        return ping[i][1].leagueNo()
+        return pingObj[i][1].leagueNo()
 
     if message.content.strip() == ">league":
-        return ping[i][1].league(message)
+        return pingObj[i][1].league(message)
 client = discord.Client()
  
 @client.event

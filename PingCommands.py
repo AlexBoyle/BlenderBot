@@ -1,28 +1,27 @@
 from time import time
 
-LeagueInitiator = ("",0)
+class ping:
 
-def league(message):
-    global LeagueInitiator
-    LeagueInitiator = (message.author, time())
-    return "League Ping Started"
+    LeagueInitiator = ("",0)
 
-def leagueYes():
-    global LeagueInitiator
-    output = ""
-    if LeagueInitiator[0] == "":
-        return 'There has not been a recent @League ping.'
-    if time() > LeagueInitiator[1] + 1800:
-        return 'There has not been a recent @League ping.'
-    else:
-        return '<@%s> Yes, I would very much enjoy playing League of Legends!' % (LeagueInitiator[0].id)
+    def league(a,message):
+        a.LeagueInitiator = (message.author, time())
+        return "League Ping Started"
 
-def leagueNo():
-    global LeagueInitiator
-    output = ""
-    if LeagueInitiator[0] == "":
-        return 'There has not been a recent @League ping.'
-    if time() > LeagueInitiator[1] + 1800:
-        return 'There has not been a recent @League ping.'
-    else:
-        return '<@%s> Unfortunately, I cannot play this round.' % (LeagueInitiator[0].id)
+    def leagueYes(a):
+        output = ""
+        if a.LeagueInitiator[0] == "":
+            return 'There has not been a recent @League ping.'
+        if time() > a.LeagueInitiator[1] + 1800:
+            return 'There has not been a recent @League ping.'
+        else:
+            return '<@%s> Yes, I would very much enjoy playing League of Legends!' % (a.LeagueInitiator[0].id)
+
+    def leagueNo(a):
+        output = ""
+        if a.LeagueInitiator[0] == "":
+            return 'There has not been a recent @League ping.'
+        if time() > a.LeagueInitiator[1] + 1800:
+            return 'There has not been a recent @League ping.'
+        else:
+            return '<@%s> Unfortunately, I cannot play this round.' % (a.LeagueInitiator[0].id)
