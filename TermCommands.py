@@ -6,7 +6,7 @@ termlist = []
 for line in data:
     if not line[0].isdigit() :
         continue
-    line = line.strip().split('. ')
+    line = line.strip().split('. ',1)
     termlist.append(line)
 termdict = {}
 for entry in termlist:
