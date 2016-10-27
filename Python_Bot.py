@@ -9,21 +9,22 @@ import PingCommands
 import VoteCommands
 
 
-ping = []
-vote = []
-
+pingObj = []
+voteObj = []
+terms = TermCommands.Terms()
 def terms(message):
+    global terms
      #reference term by number
     if message.content.startswith('!t '):
-        return TermCommands.term(message.content[3:])
+        return terms.term(message.content[3:])
 
     #search through terms
     if message.content.startswith('!ts '):
-        return TermCommands.termSearch(message.content[4:])
+        return terms.termSearch(message.content[4:])
 
     #recall 5 most recent terms
     if message.content == '!r' :
-        return  TermCommands.recent()
+        return  terms.recent()
 
     #link to t&c
     if message.content == '!link' :
@@ -35,51 +36,52 @@ def terms(message):
 
     #pull up list of TermCommands
     if message.content == '!help' :
-        return TermCommands.help()
+        return terms.help()
 
     #Finds and prints all terms referenced in the last !ts or !t command
     if message.content == '!ref':
-        return TermCommands.reference()
+        return terms.reference()
 
     #Random term
     if message.content == '!tr':
-         return TermCommands.term(str(random.randint(1,len(TermCommands.termlist))))
+         return terms.term(str(random.randint(1,len(TermCommands.termlist))))
 
 def vote(message):
-    global vote
+
+    global voteObj
     i = 0
-    for e in  vote:
+    for e in  voteObj:
        if e[0] == message.channel:
-            return None
+            break
        i += 1
-    if i == len(vote):
-        vote.append([message.channel,VoteCommands.Vote()])
+    if i == len(voteObj):
+        voteObj.append([message.channel,VoteCommands.Vote()])
 
 
     if message.content.startswith("%vote "):
-        return vote[i][1].callVote(message)
+        return voteObj[i][1].callVote(message)
 
-    if message.content.startswith("%v"):
-        return vote[i][1].vote(message)
+    if message.content.startswith("%v "):
+        return voteObj[i][1].vote(message)
 
-    if message.content.startswith("%results"):
-        return vote[i][1].results()
+    if message.content.startswith("%result"):
+        return voteObj[i][1].results()
 
     if message.content.startswith("%clear"):
-        return vote[i][1].clear()
+        return voteObj[i][1].clear()
 
     if message.content.startswith("%help"):
-        return vote[i][1].help()
+        return voteObj[i][1].help()
 
 def ping(message):
-    global ping
+    global pingObj
     i = 0
-    for e in  ping:
+    for e in  pingObj:
        if e[0] == message.channel:
             return None
        i += 1
-    if i == len(ping):
-        ping.append([message.channel,PingCommands.Ping()])
+    if i == len(pingObj):
+        pingObj.append([message.channel,ping()])
     if message.content.strip() == ">ly":
         return ping[i][1].leagueYes()
 
