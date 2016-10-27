@@ -11,20 +11,20 @@ import VoteCommands
 
 pingObj = []
 voteObj = []
-terms = TermCommands.Terms()
+
 def terms(message):
     global terms
      #reference term by number
     if message.content.startswith('!t '):
-        return terms.term(message.content[3:])
+        return TermCommnads.term(message.content[3:])
 
     #search through terms
     if message.content.startswith('!ts '):
-        return terms.termSearch(message.content[4:])
+        return TermCommnads.termSearch(message.content[4:])
 
     #recall 5 most recent terms
     if message.content == '!r' :
-        return  terms.recent()
+        return  TermCommnads.recent()
 
     #link to t&c
     if message.content == '!link' :
@@ -36,15 +36,15 @@ def terms(message):
 
     #pull up list of TermCommands
     if message.content == '!help' :
-        return terms.help()
+        return TermCommnads.help()
 
     #Finds and prints all terms referenced in the last !ts or !t command
     if message.content == '!ref':
-        return terms.reference()
+        return TermCommnads.reference()
 
     #Random term
     if message.content == '!tr':
-         return terms.term(str(random.randint(1,len(TermCommands.termlist))))
+         return TermCommnads.term(str(random.randint(1,len(TermCommands.termlist))))
 
 def vote(message):
 
@@ -78,7 +78,7 @@ def ping(message):
     i = 0
     for e in  pingObj:
        if e[0] == message.channel:
-            return None
+            break
        i += 1
     if i == len(pingObj):
         pingObj.append([message.channel,ping()])
