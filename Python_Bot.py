@@ -48,11 +48,8 @@ def vote(message):
     if message.content.startswith("%vote "):
         return VoteCommands.callVote(message)
 
-    if message.content.startswith("%y"):
-        return VoteCommands.yesVote(message)
-
-    if message.content.startswith("%n"):
-        return VoteCommands.noVote(message)
+    if message.content.startswith("%v"):
+        return VoteCommands.vote(message)
 
     if message.content.startswith("%results"):
         return VoteCommands.results()

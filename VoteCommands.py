@@ -1,56 +1,55 @@
 currentVote = ""
-yes = []
-no = []
-commandlist = [['%vote [topic]', 'set a vote for topic'],['%y[es]', 'submit a yes vote'],
-    ['%n[0]', 'submit a no vote'],['%results', 'get results for current vote'],['%clear', 'clear all data for the current vote']]
+votes = []
+commandlist = [['%vote [topic]', 'set a vote for topic'],['%v [vote]', 'submit a vote'],
+    ['%results', 'get results for current vote'],['%clear', 'clear all data for the current vote']]
 
 
 def callVote(message):
     global currentVote
-    global yes
-    global no
+    global votes
     if currentVote == "":
         currentVote = message.content[6:]
-        yes = []
-        no = []
+        votes= []
         return "Vote for '%s' started please vote yes  or no " % currentVote
     return "there is already a vote"
 
-def yesVote(message):
-    global yes
-    global no
+def vote(message):
+    global votes
     id = message.author.id
-    if id in no:
-        no.remove(id)
-    if id not in yes:
-        yes.append(id)
-    return  None
-def noVote(message):
-    global yes
-    global no
-    id = message.author.id
-    if id in yes:
-        yes.remove(id)
-    if id not in no:
-        no.append(id)
+    i = 0
+    indx = 0
+    for e in votes:
+        ind = 0
+        for d in e[1]:
+            if d == id:
+                del votes[indx][1][ind]
+            ind += 1
+        if len(votes[indx][1]) == 0:
+            del votes[indx]
+        indx += 1
+    for e in  votes:
+       if e[0] == message.content[3:].lower():
+            votes[i][1].append(id)
+            return None
+       i += 1
+    if i == len(votes):
+        votes.append([message.content[3:].lower(),[id]])
     return None
 def results():
     if currentVote == "":
         return "There is no vote right now"
-    out = "%s \nYes votes(%i):\n" % (currentVote,len(yes))
-    for e in yes:
-        out += "<@" + e + ">\n"
-    out += "No votes(%i):\n" % len(no)
-    for e in no:
-        out += "<" + e + ">\n"
+    out = currentVote
+    for e in votes:
+        out += "\n%s (%i):\n" % (e[0], len(e[1]))
+        for d in e[1]:
+            out += "<@%s>\n" % d
     return out
 def clear():
     global currentVote
-    global yes
+    global votes
     global no
     currentVote = ""
-    yes = []
-    no = []
+    votes = []
 def help():
     output = ""
     for entry in commandlist:
