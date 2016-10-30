@@ -11,6 +11,19 @@ import VoteCommands
 
 pingObj = []
 voteObj = []
+def gifs(message):
+
+    if message.content == '$list' :
+        return 'http://bit.do/giflist'
+
+    if message.content == '$gr'
+        return GifCommands.gifrandom()
+
+    if message.content == '$help'
+        return GifCommands.help()
+
+    if message.content.startswith('$gif '):
+        return GifCommands.gifsearch(message.content[5:])
 
 def terms(message):
     global terms
@@ -94,6 +107,12 @@ client = discord.Client()
  
 @client.event
 async def on_message(message):
+
+    #Gif Commands
+    if message.content.startswith('$'):
+        out = gifs(message)
+        if out !- None:
+            await client.send_message(channel,out)
 
     #Terms and conditions commands
     if message.content.startswith('!'):
