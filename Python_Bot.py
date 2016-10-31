@@ -7,7 +7,7 @@ import random
 import TermCommands
 import PingCommands
 import VoteCommands
-
+import GifCommands
 
 pingObj = []
 voteObj = []
@@ -16,10 +16,10 @@ def gifs(message):
     if message.content == '$list' :
         return 'http://bit.do/giflist'
 
-    if message.content == '$gr'
+    if message.content == '$gr':
         return GifCommands.gifrandom()
 
-    if message.content == '$help'
+    if message.content == '$help':
         return GifCommands.help()
 
     if message.content.startswith('$gif '):
@@ -111,7 +111,7 @@ async def on_message(message):
     #Gif Commands
     if message.content.startswith('$'):
         out = gifs(message)
-        if out !- None:
+        if out != None:
             await client.send_message(channel,out)
 
     #Terms and conditions commands
