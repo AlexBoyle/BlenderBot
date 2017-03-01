@@ -132,4 +132,4 @@ async def on_message(message):
         if out != None:
             await client.send_message(message.channel,out)
 
-client.run('buymyasianbaby@gmail.com','suchpassword1')
+client.run('buymyasianbaby@gmail.com','')
