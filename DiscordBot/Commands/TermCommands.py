@@ -1,4 +1,5 @@
 #Creates dictionary and list for t&c.txt for future reference.
+import random
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
