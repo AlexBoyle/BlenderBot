@@ -1,3 +1,7 @@
-# Spicier_Bot
+# BlenderBot
+##Setup
+- Install the latest version of docker
+- Fill in the `Global.py.default` variables and rename to `Global.py`
 ## Running
-- make sure to install the discord import using ` python3 -m pip install -U discord.py`
+`docker build blender-bot .`  
+`docker run -d blender-bot`
