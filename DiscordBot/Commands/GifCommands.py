@@ -18,7 +18,7 @@ for entry in giflist:
 commandlist = [['$gif [Name]', 'search a gif by its name'],['$gr','pull a random gif'],
               ['$list','get a link to all avalible gifs']]
 def run(message):
-
+    message = message.content[1:]
     if message == 'list' :
         return 'http://bit.do/giflist'
 

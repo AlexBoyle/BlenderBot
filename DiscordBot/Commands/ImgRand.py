@@ -5,11 +5,12 @@ options = list('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789')
 
 
 def run(message):
+    message = message.content[1:]
     #reference term by number
-    if message.startswith('ir '):
+    if message.startswith('imgur'):
         return genLink()
 
-def getLink():
+def urlgen():
     length = 5
     choice = np.random.permutation(options)
     urlend = ''.join(choice[0:length])
@@ -23,13 +24,13 @@ def checkLink(candidate):
         validurl = True
     return validurl
 
-def genLink(options):
+def genLink():
     attempts = 30
     while attempts > 0:
-        candidate = urlgen(options)
-        if checkfunc(candidate) == True:
+        candidate = urlgen()
+        if checkLink(candidate) == True:
             return candidate
-        attempt -= 1
+        attempts -= 1
     return 'I failed to get an image :('
 
 
@@ -43,7 +44,7 @@ def dirtyimage():
     attempts = 30
     while attempts > 0:
         candidate = urlgendirty()
-        if checkfunc(candidate) == True:
+        if checkLink(candidate) == True:
             return candidate
         attempts -= 1
     return 'I failed to get an image :('

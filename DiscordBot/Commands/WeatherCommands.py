@@ -6,6 +6,7 @@ owm = pyowm.OWM('665d0497ac66c8c8cfd2178807d07f57')
 commandlist = [['+wnz', 'get current weather by zip code'],['+wnp', 'get current weather by name (city,country)']]
 
 def run(message):
+    message = message.content[1:]
     #get current weather
     if message.startswith('wnz '):
          return current_weather_z(message[3:])
