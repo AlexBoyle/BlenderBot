@@ -17,19 +17,19 @@ for entry in giflist:
 
 commandlist = [['$gif [Name]', 'search a gif by its name'],['$gr','pull a random gif'],
               ['$list','get a link to all avalible gifs']]
-def gifs(message):
+def run(message):
 
-    if message.content == '$list' :
+    if message == 'list' :
         return 'http://bit.do/giflist'
 
-    if message.content == '$gr':
+    if message == 'gr':
         return gifrandom()
 
-    if message.content == '$help':
+    if message == 'help':
         return help()
 
-    if message.content.startswith('$gif '):
-        return gifsearch(message.content[5:])
+    if message.startswith('gif '):
+        return gifsearch(message[5:])
 #################################
 
 def help():

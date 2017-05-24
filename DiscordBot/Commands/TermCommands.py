@@ -15,33 +15,33 @@ commandlist = [['!t', 'search term by number'],['!ts', 'search through terms usi
 
 searchlist = []
 
-def terms(message):
-     #reference term by number
-    if message.content.startswith('!t '):
-        return term(message.content[3:])
+def run(message):
+    #reference term by number
+    if message.startswith('t '):
+        return term(message[2:])
 
     #search through terms
-    if message.content.startswith('!ts '):
-        return termSearch(message.content[4:])
+    if message.startswith('ts '):
+        return termSearch(message[3:])
 
     #recall 5 most recent terms
-    if message.content == '!r' :
+    if message == 'r' :
         return recent()
 
     #link to t&c
-    if message.content == '!link' :
+    if message == 'link' :
         return 'http://bit.do/termcon'
 
     #pull up list of TermCommands
-    if message.content == '!help' :
+    if message == 'help' :
         return help()
 
     #Finds and prints all terms referenced in the last !ts or !t command
-    if message.content == '!ref':
+    if message == 'ref':
         return reference()
 
     #Random term
-    if message.content == '!tr':
+    if message == 'tr':
          return term(str(random.randint(1,len(sheet))))
 def term(msg):
     global searchlist
