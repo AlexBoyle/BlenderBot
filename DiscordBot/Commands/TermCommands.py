@@ -14,6 +14,14 @@ class TermCommands:
         client = gspread.authorize(creds)
         self.sheet = client.open(termsFile).sheet1
         self.sheet = self.sheet.col_values(1)
+        temp = {}
+        it = 1
+        for term in self.sheet:
+            temp[it] = {}
+            temp[it][0] = int(term[:term.find(':')])
+            temp[it][1] = term[term.find(':')+2:]
+            it += 1
+        self.sheet = temp
     def run(self, message):
         message = message.content[1:]
         #reference term by number
@@ -48,19 +56,19 @@ class TermCommands:
         if msg.isdigit():
             self.searchlist.append(int(msg))
             if int(msg) <= len(self.sheet):
-                return ('Term number '+ (self.sheet[int(msg) - 1 ]))
+                return ('Term number '+ str(self.sheet[int(msg)][0]) + ': ' + self.sheet[int(msg)][1])
     def termSearch(self, msg):
         self.searchlist = []
         output = ""
         for entry in self.sheet:
             if msg.lower() in entry[1].lower() :
-                self.ssearchlist.append(int(entry[0]))
+                self.searchlist.append(entry[0])
         if len(self.searchlist) > 10:
             return ('Be more specific.')
         if len(self.searchlist) == 0:
             return ('No terms found.')
         for query in self.searchlist :
-            output += ('Term number ' + (self.sheet[query]))
+            output += ('Term number ' + (query) + "\n")
         return output
     def recent(self):
         i = 5
@@ -77,14 +85,15 @@ class TermCommands:
     def reference(self):
         output = ""
         referencelist = []
+
         for query in self.searchlist:
-            query = query - 1
-            if self.sheet[query][self.sheet[query].index(' ')+1] == "^" :
-                output += ('Term number ' + (self.sheet[query-1]) + '\n')
+            print(self.sheet[query][1])
+            if self.sheet[query][1][0] == "^" :
+                output += ('Term number ' + str(query-1) + ': ' + (self.sheet[query-1][1]) + '\n')
                 referencelist.append(query-1)
-            if "see: ".lower() in self.sheet[query].lower():
+            if "see: ".lower() in self.sheet[query][1].lower():
                 refstring = ""
-                reflocation = self.sheet[query].find("see: ")
+                reflocation = self.sheet[query][1].find("see: ")
                 for i in self.sheet[query][(reflocation+4):]:
                     if i.isdigit():
                         refstring += i
