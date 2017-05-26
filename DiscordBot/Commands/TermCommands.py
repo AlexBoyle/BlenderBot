@@ -74,7 +74,7 @@ class TermCommands:
         i = 5
         output = ""
         while i > 0 :
-            output += 'Term number ' + self.sheet[len(self.sheet)-i] + '\n'
+            output += 'Term number ' + self.sheet[len(self.sheet)-i][0] + ': ' + self.sheet[len(self.sheet)-i][1] + '\n'
             i -= 1
         return output
     def help(self):

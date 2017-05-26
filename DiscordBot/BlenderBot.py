@@ -46,8 +46,7 @@ async def on_message(message):
     if (('info' in message.content.lower()) and (botid in message.content.lower())):
         out = ''
         out += "```\n"
-        out += "Blender Bot:\n  This Bot was written by Alex Boyle and Rishabh Ekbote\nwith special assistance from Gary, Tyler, Otto, Pat and Nick <3\n\n  This bot is open source(github linked below) and if you happen to use"
-        out += " any files or major code blocks from this project accredidation is appreciated."
+        out += "Blender Bot:\n  This Bot was written by Alex Boyle and Rishabh Ekbote\nwith special assistance from Gary, Tyler, Otto, Pat and Nick <3\n\n  This bot is open source (github linked below). If you choose to use any files or major code blocks from this project, accreditation is appreciated."
         out += "``` https://github.com/AlexBoyle/Spicier_Bot (link to be updated)"
         await client.send_message(message.channel,out)
 client.run(Token)
