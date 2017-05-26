@@ -1,6 +1,7 @@
 
+# BlenderBot  
 <img src="http://i.imgur.com/5fBK3NV.jpg" width="230"/>  
-# BlenderBot
+
   This Bot was written by Alex Boyle and Rishabh Ekbote  
 With special assistance from Gary, Tyler, Otto, Pat and Nick <3
 
