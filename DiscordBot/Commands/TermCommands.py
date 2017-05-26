@@ -4,19 +4,16 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
 class TermCommands:
-
-    scope = ['https://spreadsheets.google.com/feeds']
-    creds = ServiceAccountCredentials.from_json_keyfile_name('Files/client_secret.json', scope)
-    client = gspread.authorize(creds)
-
-    sheet = client.open('test').sheet1
-    sheet = sheet.col_values(1)
-
+    sheet = {}
+    searchlist = []
     commandlist = [['!t', 'search term by number'],['!ts', 'search through terms using a keyword'],['!tr', 'get random term'],
         ['!r','recall the five most recent terms'],['!link','see the entire list'],['!ref','shows terms referenced by previously by me']]
-
-    searchlist = []
-
+    def __init__(self, termsFile):
+        scope = ['https://spreadsheets.google.com/feeds']
+        creds = ServiceAccountCredentials.from_json_keyfile_name('Files/client_secret.json', scope)
+        client = gspread.authorize(creds)
+        self.sheet = client.open(termsFile).sheet1
+        self.sheet = self.sheet.col_values(1)
     def run(self, message):
         message = message.content[1:]
         #reference term by number
@@ -52,7 +49,6 @@ class TermCommands:
             self.searchlist.append(int(msg))
             if int(msg) <= len(self.sheet):
                 return ('Term number '+ (self.sheet[int(msg) - 1 ]))
-
     def termSearch(self, msg):
         self.searchlist = []
         output = ""
@@ -66,21 +62,18 @@ class TermCommands:
         for query in self.searchlist :
             output += ('Term number ' + (self.sheet[query]))
         return output
-
     def recent(self):
         i = 5
         output = ""
-        while i >= 0 :
+        while i > 0 :
             output += 'Term number ' + self.sheet[len(self.sheet)-i] + '\n'
             i -= 1
         return output
-
     def help(self):
         output = ""
         for entry in self.commandlist:
             output += ('Use "%s" to %s! \n' % (entry[0],entry[1]))
         return output
-
     def reference(self):
         output = ""
         referencelist = []
