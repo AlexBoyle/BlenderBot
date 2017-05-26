@@ -1,4 +1,4 @@
-![Face](http://imgur.com/5fBK3NV)
+![Face](http://i.imgur.com/5fBK3NV.jpg)
 # BlenderBot
 ## Notes
   This Bot was written by Alex Boyle and Rishabh Ekbote  
