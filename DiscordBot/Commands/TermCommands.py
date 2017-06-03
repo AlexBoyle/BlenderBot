@@ -7,7 +7,8 @@ class TermCommands:
     sheet = {}
     searchlist = []
     commandlist = [['!t', 'search term by number'],['!ts', 'search through terms using a keyword'],['!tr', 'get random term'],
-        ['!r','recall the five most recent terms'],['!link','see the entire list'],['!ref','shows terms referenced by previously by me']]
+        ['!r','recall the five most recent terms'],['!ref','shows terms referenced by \'^\' or \'see:\'']]
+
     def __init__(self, termsFile):
         scope = ['https://spreadsheets.google.com/feeds']
         creds = ServiceAccountCredentials.from_json_keyfile_name('Files/client_secret.json', scope)
@@ -36,10 +37,6 @@ class TermCommands:
         if message == 'r' :
             return self.recent()
 
-        #link to t&c
-        if message == 'link' :
-            return 'http://bit.do/termcon'
-
         #pull up list of TermCommands
         if message == 'help' :
             return self.help()
@@ -53,43 +50,42 @@ class TermCommands:
             return self.term(str(random.randint(1,len(self.sheet))))
     def term(self, msg):
         self.searchlist = []
-        if msg.isdigit():
+        if (type(msg) is str and msg.isdigit()) or type(msg) is int:
             self.searchlist.append(int(msg))
             if int(msg) <= len(self.sheet):
                 return ('Term number '+ str(self.sheet[int(msg)][0]) + ': ' + self.sheet[int(msg)][1])
     def termSearch(self, msg):
         self.searchlist = []
         output = ""
-        for entry in self.sheet:
-            if msg.lower() in entry[1].lower() :
-                self.searchlist.append(entry[0])
+        for key in self.sheet:
+            if msg.lower() in self.sheet[key][1].lower() :
+                self.searchlist.append(key)
         if len(self.searchlist) > 10:
             return ('Be more specific.')
         if len(self.searchlist) == 0:
             return ('No terms found.')
         for query in self.searchlist :
-            output += ('Term number ' + (query) + "\n")
+            output +=  self.term(query) + "\n"
         return output
     def recent(self):
-        i = 5
+        i = 4
         output = ""
-        while i > 0 :
-            output += 'Term number ' + self.sheet[len(self.sheet)-i][0] + ': ' + self.sheet[len(self.sheet)-i][1] + '\n'
+        while i >= 0 :
+            output += self.term(len(self.sheet)- i)+ '\n'
             i -= 1
         return output
     def help(self):
-        output = ""
+        output = "```"
         for entry in self.commandlist:
             output += ('Use "%s" to %s! \n' % (entry[0],entry[1]))
-        return output
+        return output + "```"
     def reference(self):
         output = ""
         referencelist = []
-
         for query in self.searchlist:
             print(self.sheet[query][1])
             if self.sheet[query][1][0] == "^" :
-                output += ('Term number ' + str(query-1) + ': ' + (self.sheet[query-1][1]) + '\n')
+                output += self.term(query-1) + '\n'
                 referencelist.append(query-1)
             if "see: ".lower() in self.sheet[query][1].lower():
                 refstring = ""
@@ -97,7 +93,7 @@ class TermCommands:
                 for i in self.sheet[query][(reflocation+4):]:
                     if i.isdigit():
                         refstring += i
-                output += ('Term number ' + (self.sheet[int(refstring)]) + '\n')
+                output += self.term(int(refstring)) + '\n'
         self.searchlist = referencelist[:]
         if output == "":
             return "There is nothing to reference."
