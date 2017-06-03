@@ -18,10 +18,10 @@ class Weather:
              return self.help()
 
     def help(self):
-        output = ""
+        output = "```"
         for entry in self.commandlist:
             output += ('Use "%s" to %s! \n' % (entry[0],entry[1]))
-        return output
+        return output + "```"
 
     def current_weather_z(self, zip, country='us', unit='fahrenheit'):
         zip = zip.strip()
@@ -30,9 +30,9 @@ class Weather:
         temperature = w.get_temperature(unit)
         status = w.get_status()
         out = (
-            "The temperature right now is: **%s**!\n"
+            "```\nThe temperature right now is: **%s**!\n"
             "The status is: **%s**\n"
-            "Today's low is **%s** and the high for today is going to be **%s**!\n"
+            "Today's low is **%s** and the high for today is going to be **%s**!\n```"
         )% (temperature['temp'],status,temperature['temp_min'],temperature['temp_max'])
         return out
 
@@ -48,8 +48,8 @@ class Weather:
         status = w.get_status()
 
         out = (
-            "The temperature right now is: **%s**!\n"
+            "```\nThe temperature right now is: **%s**!\n"
             "The status is: **%s**\n"
-            "Today's low is **%s** and the high for today is going to be **%s**!\n"
+            "Today's low is **%s** and the high for today is going to be **%s**!\n```"
         ) % (temperature['temp'],status,temperature['temp_min'],temperature['temp_max'])
         return out

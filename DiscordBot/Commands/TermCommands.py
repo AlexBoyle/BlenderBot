@@ -6,25 +6,34 @@ from oauth2client.service_account import ServiceAccountCredentials
 class TermCommands:
     sheet = {}
     searchlist = []
-    commandlist = [['!t', 'search term by number'],['!ts', 'search through terms using a keyword'],['!tr', 'get random term'],
+    commandlist = [['!setup', 'steps to set up your terms file'],['!t', 'search term by number'],['!ts', 'search through terms using a keyword'],['!tr', 'get random term'],
         ['!r','recall the five most recent terms'],['!ref','shows terms referenced by \'^\' or \'see:\'']]
-
-    def __init__(self, termsFile):
-        scope = ['https://spreadsheets.google.com/feeds']
-        creds = ServiceAccountCredentials.from_json_keyfile_name('Files/client_secret.json', scope)
-        client = gspread.authorize(creds)
-        self.sheet = client.open(termsFile).sheet1
-        self.sheet = self.sheet.col_values(1)
-        temp = {}
-        it = 1
-        for term in self.sheet:
-            temp[it] = {}
-            temp[it][0] = int(term[:term.find(':')])
-            temp[it][1] = term[term.find(':')+2:]
-            it += 1
-        self.sheet = temp
+    isSetup = False
+    def __init__(self, server_id):
+        try:
+            scope = ['https://spreadsheets.google.com/feeds']
+            creds = ServiceAccountCredentials.from_json_keyfile_name('Files/client_secret.json', scope)
+            client = gspread.authorize(creds)
+            self.sheet = client.open(str(server_id + 'Terms')).sheet1
+            self.sheet = self.sheet.col_values(1)
+            temp = {}
+            it = 1
+            for term in self.sheet:
+                temp[it] = {}
+                temp[it][0] = int(term[:term.find(':')])
+                temp[it][1] = term[term.find(':')+2:]
+                it += 1
+            self.sheet = temp
+            self.isSetup = True
+        except:
+            self.isSetup = False
     def run(self, message):
+        if(not self.isSetup):
+            return "`Term sheet is not set up correctly`"
         message = message.content[1:]
+        #displays how to set up a term sheet
+        if message == 'setup':
+            return self.setup()
         #reference term by number
         if message.startswith('t '):
             return self.term(message[2:])
@@ -79,6 +88,19 @@ class TermCommands:
         for entry in self.commandlist:
             output += ('Use "%s" to %s! \n' % (entry[0],entry[1]))
         return output + "```"
+    def setup(self):
+        output = (
+            "```\n1) create a google spreadsheet called 'terms'\n"
+            "2) share the google sheet with ''\n"
+            "3) make the sheet look similar to the image linked below\n"
+            "Formating:\n"
+            "ex: 231: ^if you don't have a license, you can still bike #legitroadtrip [See: rule 156]"
+            " - start each term with '{number}:'\n"
+            " - if this terms references the previos term start the term with '^'\n"
+            " - the body of the term appeirs after the term number\n"
+            " - if the term needs to refrence any other term the term can be ended with '[See: rule {number}]'\n```"
+        )
+        return output
     def reference(self):
         output = ""
         referencelist = []

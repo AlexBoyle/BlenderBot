@@ -12,6 +12,8 @@ from Utility import *
 import discord
 import asyncio
 import datetime
+import sys
+import traceback
 
 commands = [
     {"sym":'-', "file":(ImageRandom()), "desc":'(NSFW)Generate Random Imgur links',"exclusive":False},
@@ -26,6 +28,7 @@ client = discord.Client()
 
 @client.event
 async def on_ready():
+    messages = 0
     client.change_presence()
     util = Utility()
     server_ids = util.get_server_ids()
@@ -33,45 +36,56 @@ async def on_ready():
         if(command['exclusive']):
             arr = {}
             for server_id in server_ids:
-                arr[server_id] = command['file']('test')
+                arr[server_id] = command['file'](server_id)
             exclusive[command['sym']] = arr
 
 @client.event
 async def on_message(message):
-    #messages += 1
-    out = ''
-    for command in commands:
-        if message.content.startswith(command['sym']):
-            if(command['exclusive']):
-                out = exclusive[command['sym']][str(message.server.id)].run(message)
-            else:
-                out = command['file'].run(message)
-            if out != None:
-                await client.send_message(message.channel,out)
-    #Bot Information
-    if (('help' in message.content.lower()) and (botid in message.content.lower())):
+    try:
+        #messages += 1
         out = ''
-        out += "```\n"
-        out += "@BlenderBot info - Info about Blender Bot\n"
         for command in commands:
-            out += command['sym'] + "help -" + command['desc'] + "\n"
-        out += "```"
-        await client.send_message(message.channel,out)
-    if (('info' in message.content.lower()) and (botid in message.content.lower())):
-        out = (
-            "```\n"
-            "Blender Bot:\n  This Bot was written by Alex Boyle and Rishabh Ekbote\nwith special "
-            "assistance from Gary, Tyler, Otto, Pat and Nick <3\n\n  This bot is open source "
-            "(github linked below). If you choose to use any files or major code blocks from this "
-            "project, accreditation is appreciated."
-            "``` https://github.com/AlexBoyle/Spicier_Bot (link to be updated)"
-        )
-        await client.send_message(message.channel,out)
-    if (('status' in message.content.lower()) and (botid in message.content.lower())):
-        out = (
-            ""
-        )
-        await client.send_message(message.channel,out)
+            if message.content.startswith(command['sym']):
+                if(command['exclusive']):
+                    out = exclusive[command['sym']][str(message.server.id)].run(message)
+                else:
+                    out = command['file'].run(message)
+                if out != None:
+                    await client.send_message(message.channel,out)
+        #Bot Information
+        if (('help' in message.content.lower()) and (botid in message.content.lower())):
+            out = ''
+            out += "```\n"
+            out += "@BlenderBot info - Info about Blender Bot\n"
+            for command in commands:
+                out += command['sym'] + "help -" + command['desc'] + "\n"
+            out += "```"
+            await client.send_message(message.channel,out)
+        if (('info' in message.content.lower()) and (botid in message.content.lower())):
+            out = (
+                "```\n"
+                "Blender Bot:\n  This Bot was written by Alex Boyle and Rishabh Ekbote\nwith special "
+                "assistance from Gary, Tyler, Otto, Pat and Nick <3\n\n  This bot is open source "
+                "(github linked below). If you choose to use any files or major code blocks from this "
+                "project, accreditation is appreciated."
+                "``` https://github.com/AlexBoyle/Spicier_Bot (link to be updated)"
+            )
+            await client.send_message(message.channel,out)
+        if (('status' in message.content.lower()) and (botid in message.content.lower())):
+            out = (
+                ""
+            )
+            await client.send_message(message.channel,out)
+    except Exception as exception:
+        print('-'*30)
+        print(str(sys.exc_info()[0]) + '\n')
+        traceback.print_exc(file=sys.stdout)
+
+@client.event
+async def on_error(event, args, somthing_else):
+   print('there was an issue, good luck')
+
+
 
 if __name__ == '__main__':
     client.run(Token)
