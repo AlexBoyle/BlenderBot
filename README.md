@@ -6,18 +6,13 @@
 With special assistance from Gary, Tyler, Otto, Pat and Nick <3
 
   This bot is open source(github linked below) and if you happen to use and files or major code blocks from this project accredidation is appreciated.  
-## Setup
-- Install the latest version of docker
-- Fill in the `Global.py.default` file and rename to `Global.py` 
-- Fill in the `client_secret.json.default` file and rename to `client_secret.json`  
-## Running  
+## Running This Bot
 ### Docker  
-- install Docker   
-`sudo apt-get install docker.io`  
-- Run BlenderBot  
-`docker-manager -b -i blender-bot start`  
+- Install Docker (https://docs.docker.com/engine/installation/)
+- Install Docker Compose (https://docs.docker.com/compose/install/)  
+- start the container by going into the BlenderBot directory and running 
+`docker-compose up -d`  
 ### Unix
 - Install dependencies  
 `python3 -m pip install --upgrade pip discord.py pyowm numpy requests gspread google-api-python-client`  
-- Run  
-`./DiscorcBot/BlenderBot.py`  
+- Give run permission to `DiscordBot/BlenderBot.py` and excecuteusing python3 or higher  
