@@ -13,6 +13,7 @@ With special assistance from Gary, Tyler, Otto, Pat and Nick <3
 - start the container by going into the BlenderBot directory and running 
 `docker-compose up -d`  
 ### Unix
-- Install dependencies  
+- install python3
+- Install needed python libraries 
 `python3 -m pip install --upgrade pip discord.py pyowm numpy requests gspread google-api-python-client`  
-- Give run permission to `DiscordBot/BlenderBot.py` and excecuteusing python3 or higher  
+- Give run permission to `DiscordBot/BlenderBot.py` and excecute using python3  
