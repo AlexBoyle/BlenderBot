@@ -17,7 +17,7 @@ import sys
 import traceback
 
 commands = [
-    {"sym":'-', "file":(ImageRandom()), "desc":'(NSFW)Generate Random Imgur links',"exclusive":False,"help":True},
+    {"sym":'-', "file":(ImageRandom()), "desc":'(NSFW)Generate Random image links',"exclusive":False,"help":True},
     {"sym":'!', "file":(TermCommands), "desc":'Commands to easily look up our Terms and Conditions',"exclusive":True,"help":True},
     {"sym":'+', "file":(WeatherCommands()), "desc":'Commands to quickly look up the weather in your area',"exclusive":False,"help":True},
     {"sym":'<@' + botid + '>', "file":(BotCommands()), "desc":'',"exclusive":False,"help":False}
@@ -50,16 +50,14 @@ async def on_server_join(server):
             exclusive[command['sym']][server.id] = command['file'](server.id)
 @client.event
 async def on_message(message):
-    print(message.content)
     try:
-        #messages += 1
         out = ''
         for command in commands:
             if message.content.startswith(command['sym']):
                 if(command['exclusive']):
-                    out = await exclusive[command['sym']][str(message.server.id)].run(message)
+                    out = exclusive[command['sym']][str(message.server.id)].run(message)
                 else:
-                    out = await command['file'].run(message)
+                    out = command['file'].run(message)
                 if out != None:
                     await client.send_message(message.channel,out)
         #Bot Information

@@ -1,5 +1,4 @@
 #Creates dictionary and list for t&c.txt for future reference.
-import asyncio
 import random
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -7,7 +6,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 class TermCommands:
     sheet = {}
     searchlist = []
-    commandlist = [['!setup', 'steps to set up your terms file'],['!t', 'search term by number'],['!ts', 'search through terms using a keyword'],['!tr', 'get random term'],
+    commandlist = [['!t', 'search term by number'],['!ts', 'search through terms using a keyword'],['!tr', 'get random term'],
         ['!r','recall the five most recent terms'],['!ref','shows terms referenced by \'^\' or \'see:\'']]
     isSetup = False
     def __init__(self, server_id):
@@ -28,14 +27,11 @@ class TermCommands:
             self.isSetup = True
         except:
             self.isSetup = False
-    async def run(self, message):
+    def run(self, message):
         if(not self.isSetup):
             return "`Term sheet is not set up correctly`"
 
         message = message.content[1:]
-        #displays how to set up a term sheet
-        if message == 'setup':
-            return self.setup()
         #reference term by number
         if message.startswith('t '):
             return self.term(message[2:])
@@ -94,24 +90,10 @@ class TermCommands:
         for entry in self.commandlist:
             output += ('Use "%s" to %s! \n' % (entry[0],entry[1]))
         return output + "```"
-    def setup(self):
-        output = (
-            "```\n1) create a google spreadsheet called 'terms'\n"
-            "2) share the google sheet with ''\n"
-            "3) make the sheet look similar to the image linked below\n"
-            "Formating:\n"
-            "ex: 231: ^if you don't have a license, you can still bike #legitroadtrip [See: rule 156]"
-            " - start each term with '{number}:'\n"
-            " - if this terms references the previos term start the term with '^'\n"
-            " - the body of the term appeirs after the term number\n"
-            " - if the term needs to refrence any other term the term can be ended with '[See: rule {number}]'\n```"
-        )
-        return output
     def reference(self):
         output = ""
         referencelist = []
         for query in self.searchlist:
-            print(self.sheet[query][1])
             if self.sheet[query][1][0] == "^" :
                 output += self.getTerm(query-1) + '\n'
                 referencelist.append(query-1)

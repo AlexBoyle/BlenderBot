@@ -1,19 +1,19 @@
 version: '2'
 services:
   mysql:
-    restart: always
-    image: mysql:8.0.1
+    image: mysql:8.0
     container_name: mysql
-    restart: always
+    volumes:
+      - ./mysql:/var/lib/mysql
     expose:
       - "3306" #for service mysql-proxy
     ports:
       - "3307:3306" #for external connection
     environment:
-      #MYSQL_ROOT_PASSWORD: password 
-      #MYSQL_DATABASE: password
+      MYSQL_ROOT_PASSWORD: password 
+      MYSQL_DATABASE: BlenderBot
       MYSQL_USER: root
-      #MYSQL_PASSWORD: password
+      MYSQL_PASSWORD: password
   blenderbot:
     restart: always
     build: "./"
