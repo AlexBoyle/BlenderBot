@@ -1,3 +1,4 @@
+import asyncio
 import numpy as np
 import requests
 
@@ -9,7 +10,7 @@ class ImageRandom:
         ['-r34', 'Generate a random rule 34 image']
     ]
 
-    def run(self, message):
+    async def run(self, message):
         message = message.content[1:]
         if message.startswith('imgur'):
             return self.genLink()

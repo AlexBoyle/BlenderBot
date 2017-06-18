@@ -1,0 +1,22 @@
+version: '2'
+services:
+  mysql:
+    restart: always
+    image: mysql:8.0.1
+    container_name: mysql
+    restart: always
+    expose:
+      - "3306" #for service mysql-proxy
+    ports:
+      - "3307:3306" #for external connection
+    environment:
+      #MYSQL_ROOT_PASSWORD: password 
+      #MYSQL_DATABASE: password
+      MYSQL_USER: root
+      #MYSQL_PASSWORD: password
+  blenderbot:
+    restart: always
+    build: "./"
+    depends_on:
+      - mysql
+

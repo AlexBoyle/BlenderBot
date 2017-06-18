@@ -6,6 +6,7 @@
 from Commands.WeatherCommands import *
 from Commands.TermCommands import *
 from Commands.ImageRand import *
+from Commands.BotCommands import *
 from Global import *
 from Utility import *
 
@@ -16,13 +17,16 @@ import sys
 import traceback
 
 commands = [
-    {"sym":'-', "file":(ImageRandom()), "desc":'(NSFW)Generate Random Imgur links',"exclusive":False},
-    {"sym":'!', "file":(TermCommands), "desc":'Commands to easily look up our Terms and Conditions',"exclusive":True},
-    {"sym":'+', "file":(Weather()), "desc":'Commands to quickly look up the weather in your area',"exclusive":False}
+    {"sym":'-', "file":(ImageRandom()), "desc":'(NSFW)Generate Random Imgur links',"exclusive":False,"help":True},
+    {"sym":'!', "file":(TermCommands), "desc":'Commands to easily look up our Terms and Conditions',"exclusive":True,"help":True},
+    {"sym":'+', "file":(WeatherCommands()), "desc":'Commands to quickly look up the weather in your area',"exclusive":False,"help":True},
+    {"sym":'<@' + botid + '>', "file":(BotCommands()), "desc":'',"exclusive":False,"help":False}
 ]
 exclusive = {}
 start_time = datetime.datetime.now()
 messages = 0
+def isme(m):
+    return m.author == client.user
 
 client = discord.Client()
 
@@ -40,16 +44,22 @@ async def on_ready():
             exclusive[command['sym']] = arr
 
 @client.event
+async def on_server_join(server):
+    for command in commands:
+        if(command['exclusive']):
+            exclusive[command['sym']][server.id] = command['file'](server.id)
+@client.event
 async def on_message(message):
+    print(message.content)
     try:
         #messages += 1
         out = ''
         for command in commands:
             if message.content.startswith(command['sym']):
                 if(command['exclusive']):
-                    out = exclusive[command['sym']][str(message.server.id)].run(message)
+                    out = await exclusive[command['sym']][str(message.server.id)].run(message)
                 else:
-                    out = command['file'].run(message)
+                    out = await command['file'].run(message)
                 if out != None:
                     await client.send_message(message.channel,out)
         #Bot Information
@@ -58,7 +68,8 @@ async def on_message(message):
             out += "```\n"
             out += "@BlenderBot info - Info about Blender Bot\n"
             for command in commands:
-                out += command['sym'] + "help -" + command['desc'] + "\n"
+                if(command.help):
+                    out += command['sym'] + "help -" + command['desc'] + "\n"
             out += "```"
             await client.send_message(message.channel,out)
         if (('info' in message.content.lower()) and (botid in message.content.lower())):
@@ -76,8 +87,11 @@ async def on_message(message):
                 ""
             )
             await client.send_message(message.channel,out)
+#       if(('purge' in message.content.lower()) and (botid in message.content.lower())):
+#           deleted = len(await client.purge_from(message.channel, limit=100, check=isme))
+#           await client.send_message(message.channel,"```" + str(deleted) + " messages deleted```")
     except Exception as exception:
-        print('-'*30)
+        print('-'*50)
         print(str(sys.exc_info()[0]) + '\n')
         traceback.print_exc(file=sys.stdout)
 

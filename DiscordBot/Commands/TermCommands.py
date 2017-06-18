@@ -1,4 +1,5 @@
 #Creates dictionary and list for t&c.txt for future reference.
+import asyncio
 import random
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -27,9 +28,10 @@ class TermCommands:
             self.isSetup = True
         except:
             self.isSetup = False
-    def run(self, message):
+    async def run(self, message):
         if(not self.isSetup):
             return "`Term sheet is not set up correctly`"
+
         message = message.content[1:]
         #displays how to set up a term sheet
         if message == 'setup':
@@ -57,30 +59,34 @@ class TermCommands:
         #Random term
         if message == 'tr':
             return self.term(str(random.randint(1,len(self.sheet))))
+
+    def getTerm(self, num):
+        if (type(num) is str and num.isdigit()) or type(num) is int:
+            self.searchlist.append(int(num))
+            if int(num) <= len(self.sheet):
+                return ('Term number '+ str(self.sheet[int(num)][0]) + ': ' + self.sheet[int(num)][1])
     def term(self, msg):
         self.searchlist = []
-        if (type(msg) is str and msg.isdigit()) or type(msg) is int:
-            self.searchlist.append(int(msg))
-            if int(msg) <= len(self.sheet):
-                return ('Term number '+ str(self.sheet[int(msg)][0]) + ': ' + self.sheet[int(msg)][1])
+        return self.getTerm(msg)
     def termSearch(self, msg):
-        self.searchlist = []
+        searchlist = []
         output = ""
         for key in self.sheet:
             if msg.lower() in self.sheet[key][1].lower() :
-                self.searchlist.append(key)
-        if len(self.searchlist) > 10:
+                searchlist.append(key)
+        if len(searchlist) > 10:
             return ('Be more specific.')
-        if len(self.searchlist) == 0:
+        if len(searchlist) == 0:
             return ('No terms found.')
-        for query in self.searchlist :
-            output +=  self.term(query) + "\n"
+        for query in searchlist :
+            output +=  self.getTerm(query) + "\n"
+        self.searchlist = searchlist
         return output
     def recent(self):
         i = 4
         output = ""
         while i >= 0 :
-            output += self.term(len(self.sheet)- i)+ '\n'
+            output += self.getTerm(len(self.sheet)- i)+ '\n'
             i -= 1
         return output
     def help(self):
@@ -107,7 +113,7 @@ class TermCommands:
         for query in self.searchlist:
             print(self.sheet[query][1])
             if self.sheet[query][1][0] == "^" :
-                output += self.term(query-1) + '\n'
+                output += self.getTerm(query-1) + '\n'
                 referencelist.append(query-1)
             if "see: ".lower() in self.sheet[query][1].lower():
                 refstring = ""
@@ -115,7 +121,7 @@ class TermCommands:
                 for i in self.sheet[query][(reflocation+4):]:
                     if i.isdigit():
                         refstring += i
-                output += self.term(int(refstring)) + '\n'
+                output += self.getTerm(int(refstring)) + '\n'
         self.searchlist = referencelist[:]
         if output == "":
             return "There is nothing to reference."
