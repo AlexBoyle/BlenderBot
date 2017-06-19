@@ -3,12 +3,13 @@
 #All code written by Alex Boyle and Rishabh Ekbote
 #With special assistance from Gary, Tyler, Otto, Pat and Nick <3
 
+from Utility.sqlUtility import *
 from Commands.WeatherCommands import *
 from Commands.TermCommands import *
 from Commands.ImageRand import *
 from Commands.BotCommands import *
 from Global import *
-from Utility import *
+from Uti import *
 
 import discord
 import asyncio
@@ -32,7 +33,8 @@ client = discord.Client()
 
 @client.event
 async def on_ready():
-    messages = 0
+    #sql = sqlUtility()
+    #sql.prepareDatabase()
     client.change_presence()
     util = Utility()
     server_ids = util.get_server_ids()

@@ -1,7 +1,7 @@
 version: '2'
 services:
   mysql:
-    image: mysql:8.0
+    image: mysql:8.0.1
     container_name: mysql
     volumes:
       - ./mysql:/var/lib/mysql
@@ -11,12 +11,13 @@ services:
       - "3307:3306" #for external connection
     environment:
       MYSQL_ROOT_PASSWORD: password 
-      MYSQL_DATABASE: BlenderBot
+      MYSQL_DATABASE: test
       MYSQL_USER: root
       MYSQL_PASSWORD: password
   blenderbot:
     restart: always
-    build: "./"
+    build: "./Bot/"
     depends_on:
       - mysql
-
+    links:
+      - "mysql:mysql"
