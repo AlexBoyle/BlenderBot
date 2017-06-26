@@ -5,10 +5,6 @@ services:
     container_name: mysql
     volumes:
       - ./mysql:/var/lib/mysql
-    expose:
-      - "3306" #for service mysql-proxy
-    ports:
-      - "3307:3306" #for external connection
     environment:
       MYSQL_ROOT_PASSWORD: password 
       MYSQL_DATABASE: blenderbot
