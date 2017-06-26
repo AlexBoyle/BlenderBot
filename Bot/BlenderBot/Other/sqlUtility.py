@@ -8,7 +8,7 @@ class sql:
     try:
       self.db = mysql.connector.connect(
         user='root',
-        password='password',
+        password='',
         host='mysql',
         database='blenderbot'
       )
