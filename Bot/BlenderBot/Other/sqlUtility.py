@@ -1,7 +1,7 @@
 import mysql.connector
 from mysql.connector import errorcode
 
-class sqlUtility:
+class sql:
   db = None
   def __init__(self):
     print('here')
@@ -10,7 +10,7 @@ class sqlUtility:
         user='root',
         password='password',
         host='mysql',
-        database='test'
+        database='blenderbot'
       )
     except mysql.connector.Error as err:
       if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
@@ -39,3 +39,9 @@ class sqlUtility:
     conn.execute(query)
     self.db.commit()
     conn.close()
+  def query(self, query):
+    conn = self.db.cursor()
+    conn.execute(query)
+    out = conn.fetchall()
+    conn.close()
+    return out

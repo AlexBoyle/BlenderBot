@@ -11,11 +11,10 @@ services:
       - "3307:3306" #for external connection
     environment:
       MYSQL_ROOT_PASSWORD: password 
-      MYSQL_DATABASE: test
+      MYSQL_DATABASE: blenderbot
       MYSQL_USER: root
       MYSQL_PASSWORD: password
   blenderbot:
-    restart: always
     build: "./Bot/"
     depends_on:
       - mysql
