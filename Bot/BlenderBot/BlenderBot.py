@@ -2,22 +2,19 @@
 
 #All code written by Alex Boyle and Rishabh Ekbote
 #With special assistance from Gary, Tyler, Otto, Pat and Nick <3
-
-from Other.sqlUtility import *
+from Utility.sqlUtility import *
 from Commands.WeatherCommands import *
 from Commands.TermCommands import *
 from Commands.ImageRand import *
 from Commands.BotCommands import *
 from Commands.OtherCommands import *
 from Global import *
-from temp import *
 
 import discord
 import asyncio
 import datetime
 import sys
 import traceback
-
 commands = [
   {"sym":'-', "file":(ImageRandom()), "desc":'(NSFW)Generate Random image links',"exclusive":False,"help":True},
   {"sym":'!', "file":(TermCommands), "desc":'Commands to easily look up our Terms and Conditions',"exclusive":True,"help":True},
@@ -26,7 +23,6 @@ commands = [
   {"sym":'<@' + botid + '>', "file":(BotCommands()), "desc":'',"exclusive":False,"help":False}
 ]
 exclusive = {}
-start_time = datetime.datetime.now()
 
 def isme(m):
   return m.author == client.user
@@ -35,16 +31,14 @@ client = discord.Client()
 
 @client.event
 async def on_ready():
-  #sqll = sql()
-  #print(sqll.query("select count(num) from terms;"))
-  client.change_presence(game="Snappin Necks and Cashin Checks")
-  util = Utility()
-  server_ids = util.get_server_ids()
+  util = sql()
+  servers = util.query("SELECT * FROM servers")
+  print(servers)
   for command in commands:
     if(command['exclusive']):
       arr = {}
-      for server_id in server_ids:
-        arr[server_id] = command['file'](server_id)
+      for server in servers:
+        arr[server['id']] = command['file'](server['id'])
       exclusive[command['sym']] = arr
 
 @client.event
@@ -54,55 +48,37 @@ async def on_server_join(server):
       exclusive[command['sym']][server.id] = command['file'](server.id)
 @client.event
 async def on_message(message):
-  try:
+  out = ''
+  for command in commands:
+    if message.content.startswith(command['sym']):
+      if(command['exclusive']):
+        out = exclusive[command['sym']][str(message.server.id)].run(message)
+      else:
+        out = command['file'].run(message)
+      if out != None:
+        await client.send_message(message.channel,out)
+  #Bot Information
+  if (('help' in message.content.lower()) and (botid in message.content.lower())):
     out = ''
+    out += "```\n"
+    out += "@BlenderBot info - Info about Blender Bot\n"
     for command in commands:
-      if message.content.startswith(command['sym']):
-        if(command['exclusive']):
-          out = exclusive[command['sym']][str(message.server.id)].run(message)
-        else:
-          out = command['file'].run(message)
-        if out != None:
-          await client.send_message(message.channel,out)
-    #Bot Information
-    print(message.content.lower())
-    if (('help' in message.content.lower()) and (botid in message.content.lower())):
-      out = ''
-      out += "```\n"
-      out += "@BlenderBot info - Info about Blender Bot\n"
-      for command in commands:
-        if(command.help):
-          out += command['sym'] + "help -" + command['desc'] + "\n"
-      out += "```"
-      await client.send_message(message.channel,out)
-    if (('info' in message.content.lower()) and (botid in message.content.lower())):
-      out = (
-        "```\n"
-        "Blender Bot:\n  This Bot was written by Alex Boyle and Rishabh Ekbote\nwith special "
-        "assistance from Gary, Tyler, Otto, Pat and Nick <3\n\n  This bot is open source "
-        "(github linked below). If you choose to use any files or major code blocks from this "
-        "project, accreditation is appreciated."
-        "``` https://github.com/AlexBoyle/Spicier_Bot (link to be updated)"
-      )
-      await client.send_message(message.channel,out)
-    if (('status' in message.content.lower()) and (botid in message.content.lower())):
-      out = (
-        ""
-      )
-      await client.send_message(message.channel,out)
-    if(('purge' in message.content.lower()) and (botid in message.content.lower())):
-      deleted = len(await client.purge_from(message.channel, limit=100, check=isme))
-      await client.send_message(message.channel,"```" + str(deleted) + " messages deleted```")
-  except Exception as exception:
-    print('-'*50)
-    print(str(sys.exc_info()[0]) + '\n')
-    traceback.print_exc(file=sys.stdout)
-
-@client.event
-async def on_error(event, args, somthing_else):
-  print('there was an issue, good luck')
-
-
-
+      if(command['help']):
+        out += command['sym'] + "help -" + command['desc'] + "\n"
+    out += "```"
+    await client.send_message(message.channel,out)
+  if (('info' in message.content.lower()) and (botid in message.content.lower())):
+    out = (
+      "```\n"
+      "Blender Bot:\n  This Bot was written by Alex Boyle and Rishabh Ekbote\nwith special "
+      "assistance from Gary, Tyler, Otto, Pat and Nick <3\n\n  This bot is open source "
+      "(github linked below). If you choose to use any files or major code blocks from this "
+      "project, accreditation is appreciated."
+      "``` https://github.com/AlexBoyle/BlenderBot"
+    )
+    await client.send_message(message.channel,out)
+  if(('purge' in message.content.lower()) and (botid in message.content.lower())):
+    deleted = len(await client.purge_from(message.channel, limit=100, check=isme))
+    await client.send_message(message.channel,"```" + str(deleted) + " messages deleted```")
 if __name__ == '__main__':
   client.run(Token)

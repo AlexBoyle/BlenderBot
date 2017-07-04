@@ -1,2 +1,7 @@
 Token = ''
 botid = ''
+db_host = ''
+db_user = ''
+db_pass = ''
+db_databace = ''
+db_port = ''

@@ -1,7 +1,6 @@
 #Creates dictionary and list for t&c.txt for future reference.
+from Utility.sqlUtility import *
 import random
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 
 class TermCommands:
   sheet = {}
@@ -11,25 +10,16 @@ class TermCommands:
   isSetup = False
   def __init__(self, server_id):
     try:
-      scope = ['https://spreadsheets.google.com/feeds']
-      creds = ServiceAccountCredentials.from_json_keyfile_name('Files/client_secret.json', scope)
-      client = gspread.authorize(creds)
-      self.sheet = client.open(str(server_id + 'Terms')).sheet1
-      self.sheet = self.sheet.col_values(1)
-      temp = {}
-      it = 1
-      for term in self.sheet:
-        temp[it] = {}
-        temp[it][0] = int(term[:term.find(':')])
-        temp[it][1] = term[term.find(':')+2:]
-        it += 1
-      self.sheet = temp
+      self.server_id = str(server_id)
+      self.sql = sql()
+      self.length = self.sql.query("SELECT COUNT(num) AS length FROM terms WHERE " + str(server_id))[0]['length']
       self.isSetup = True
-    except:
+    except Exception as inst:
+      print(inst)
       self.isSetup = False
   def run(self, message):
     if(not self.isSetup):
-      return "`Term sheet is not set up correctly`"
+      return "`Something went wrong`"
 
     message = message.content[1:]
     #reference term by number
@@ -58,31 +48,29 @@ class TermCommands:
 
   def getTerm(self, num):
     if (type(num) is str and num.isdigit()) or type(num) is int:
-      self.searchlist.append(int(num))
-      if int(num) <= len(self.sheet):
-        return ('Term number '+ str(self.sheet[int(num)][0]) + ': ' + self.sheet[int(num)][1])
+      if int(num) <= self.length:
+        term = self.sql.query("SELECT * FROM terms WHERE server_id=" + str(self.server_id) + " AND num=" + str(num))[0]
+        return ('Term number '+ str(term['num']) + ': ' + term['content'])
   def term(self, msg):
     self.searchlist = []
     return self.getTerm(msg)
   def termSearch(self, msg):
-    searchlist = []
+    searchlist = self.sql.query("SELECT num, content FROM terms WHERE server_id=" + self.server_id + " AND content LIKE " + '"%' + msg + '%"')
     output = ""
-    for key in self.sheet:
-      if msg.lower() in self.sheet[key][1].lower() :
-        searchlist.append(key)
+    
     if len(searchlist) > 10:
       return ('Be more specific.')
     if len(searchlist) == 0:
       return ('No terms found.')
     for query in searchlist :
-      output +=  self.getTerm(query) + "\n"
+      output +=  self.getTerm(query['num']) + "\n"
     self.searchlist = searchlist
     return output
   def recent(self):
     i = 4
     output = ""
     while i >= 0 :
-      output += self.getTerm(len(self.sheet)- i)+ '\n'
+      output += self.getTerm(self.length- i)+ '\n'
       i -= 1
     return output
   def help(self):
@@ -94,13 +82,13 @@ class TermCommands:
     output = ""
     referencelist = []
     for query in self.searchlist:
-      if self.sheet[query][1][0] == "^" :
-        output += self.getTerm(query-1) + '\n'
-        referencelist.append(query-1)
-      if "see: ".lower() in self.sheet[query][1].lower():
+      if query['content'][0] == "^" :
+        output += self.getTerm(query['num'] - 1) + '\n'
+        referencelist.append(query['num']-1)
+      if "see: ".lower() in query['content'].lower():
         refstring = ""
-        reflocation = self.sheet[query][1].find("see: ")
-        for i in self.sheet[query][(reflocation+4):]:
+        reflocation = query['content'].find("see: ")
+        for i in query['content'][(reflocation+4):]:
           if i.isdigit():
             refstring += i
         output += self.getTerm(int(refstring)) + '\n'
