@@ -13,7 +13,7 @@ class sql:
       host = db_host,
       port = db_port,
       user = db_user,
-      passwd = db_user,
+      passwd = db_pass,
       db = db_databace,
       charset = 'utf8',
       cursorclass=pymysql.cursors.DictCursor

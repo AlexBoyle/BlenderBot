@@ -1,61 +1,72 @@
 #Creates dictionary and list for t&c.txt for future reference.
-from Utility.sqlUtility import *
+from Utility.TermService import *
 import random
 
 class TermCommands:
-  sheet = {}
   searchlist = []
   commandlist = [['!t', 'search term by number'],['!ts', 'search through terms using a keyword'],['!tr', 'get random term'],
     ['!r','recall the five most recent terms'],['!ref','shows terms referenced by \'^\' or \'see:\'']]
   isSetup = False
   def __init__(self, server_id):
     try:
-      self.server_id = str(server_id)
-      self.sql = sql()
-      self.length = self.sql.query("SELECT COUNT(num) AS length FROM terms WHERE " + str(server_id))[0]['length']
+      self.service = TermService(server_id)
+      self.length = self.service.getLen()
       self.isSetup = True
     except Exception as inst:
       print(inst)
       self.isSetup = False
   def run(self, message):
-    if(not self.isSetup):
-      return "`Something went wrong`"
+    msg = message.content[1:]
 
-    message = message.content[1:]
+    #Admin commands
+    if message.channel.permissions_for(message.author).administrator:
+      if msg.startswith('add '):
+        return self.add(msg[4:])
+      if msg.startswith('rm '):
+        return self.remove(msg[3:])
+      if msg.startswith('edit '):
+        return self.edit(msg[5:])
+
     #reference term by number
-    if message.startswith('t '):
-      return self.term(message[2:])
+    if msg.startswith('t '):
+      return self.term(msg[2:])
 
     #search through terms
-    if message.startswith('ts '):
-      return self.termSearch(message[3:])
+    if msg.startswith('ts '):
+      return self.termSearch(msg[3:])
 
     #recall 5 most recent terms
-    if message == 'r' :
+    if msg == 'r' :
       return self.recent()
 
     #pull up list of TermCommands
-    if message == 'help' :
+    if msg == 'help' :
       return self.help()
 
     #Finds and prints all terms referenced in the last !ts or !t command
-    if message == 'ref':
+    if msg == 'ref':
       return self.reference()
 
     #Random term
-    if message == 'tr':
-      return self.term(str(random.randint(1,len(self.sheet))))
-
+    if msg == 'tr':
+      return self.term(str(random.randint(1,self.length)))
+  def add(self, msg):
+    return self.service.newTerm(msg)
+  def rm(self, msg):
+    return self.service.rmTerm(msg)
+  def edit(self, msg):
+    return self.service.editTerm(1,msg)
   def getTerm(self, num):
     if (type(num) is str and num.isdigit()) or type(num) is int:
       if int(num) <= self.length:
-        term = self.sql.query("SELECT * FROM terms WHERE server_id=" + str(self.server_id) + " AND num=" + str(num))[0]
+        term = self.service.getTerm(num)
+        self.searchlist.append(term)
         return ('Term number '+ str(term['num']) + ': ' + term['content'])
   def term(self, msg):
     self.searchlist = []
     return self.getTerm(msg)
   def termSearch(self, msg):
-    searchlist = self.sql.query("SELECT num, content FROM terms WHERE server_id=" + self.server_id + " AND content LIKE " + '"%' + msg + '%"')
+    searchlist = self.service.getSearch(msg)
     output = ""
     
     if len(searchlist) > 10:

@@ -6,7 +6,6 @@ from Utility.sqlUtility import *
 from Commands.WeatherCommands import *
 from Commands.TermCommands import *
 from Commands.ImageRand import *
-from Commands.BotCommands import *
 from Commands.OtherCommands import *
 from Global import *
 
@@ -16,24 +15,47 @@ import datetime
 import sys
 import traceback
 commands = [
-  {"sym":'-', "file":(ImageRandom()), "desc":'(NSFW)Generate Random image links',"exclusive":False,"help":True},
-  {"sym":'!', "file":(TermCommands), "desc":'Commands to easily look up our Terms and Conditions',"exclusive":True,"help":True},
-  {"sym":'+', "file":(WeatherCommands()), "desc":'Commands to quickly look up the weather in your area',"exclusive":False,"help":True},
-  {"sym":'&', "file":(Other()), "desc":'Random utilitys people hae requested',"exclusive":False,"help":True},
-  {"sym":'<@' + botid + '>', "file":(BotCommands()), "desc":'',"exclusive":False,"help":False}
+  {
+    "sym":'-',
+    "file":(ImageRandom()),
+    "desc":'Generate Random image links',
+    "exclusive":False,
+    "help":True
+  },
+  {
+    "sym":'!',
+    "file":(TermCommands),
+    "desc":'Commands to easily look up our Terms and Conditions',
+    "exclusive":True,
+    "help":True
+  },
+  {
+    "sym":'+',
+    "file":(WeatherCommands()),
+    "desc":'Commands to quickly look up the weather in your area',
+    "exclusive":False,
+    "help":True
+  },
+  {
+    "sym":'&',
+    "file":(Other()),
+    "desc":'Random utilitys people hae requested',
+    "exclusive":False,
+    "help":True
+  }
 ]
 exclusive = {}
-
 def isme(m):
   return m.author == client.user
 
+
 client = discord.Client()
 
+#when BlenderBothas launched this is called
 @client.event
 async def on_ready():
   util = sql()
   servers = util.query("SELECT * FROM servers")
-  print(servers)
   for command in commands:
     if(command['exclusive']):
       arr = {}
@@ -41,11 +63,14 @@ async def on_ready():
         arr[server['id']] = command['file'](server['id'])
       exclusive[command['sym']] = arr
 
+#When BlenderBot Joins a server this is called
 @client.event
 async def on_server_join(server):
   for command in commands:
     if(command['exclusive']):
       exclusive[command['sym']][server.id] = command['file'](server.id)
+
+# All messages get sent through this function
 @client.event
 async def on_message(message):
   out = ''
