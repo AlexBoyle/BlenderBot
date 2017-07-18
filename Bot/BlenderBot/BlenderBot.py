@@ -6,7 +6,6 @@ from Utility.sqlUtility import *
 from Commands.WeatherCommands import *
 from Commands.TermCommands import *
 from Commands.ImageRand import *
-from Commands.OtherCommands import *
 from Global import *
 
 import discord
@@ -33,13 +32,6 @@ commands = [
     "sym":'+',
     "file":(WeatherCommands()),
     "desc":'Commands to quickly look up the weather in your area',
-    "exclusive":False,
-    "help":True
-  },
-  {
-    "sym":'&',
-    "file":(Other()),
-    "desc":'Random utilitys people hae requested',
     "exclusive":False,
     "help":True
   }
@@ -73,7 +65,9 @@ async def on_server_join(server):
 # All messages get sent through this function
 @client.event
 async def on_message(message):
+  print(message.content)
   out = ''
+  #all commands
   for command in commands:
     if message.content.startswith(command['sym']):
       if(command['exclusive']):
@@ -92,6 +86,7 @@ async def on_message(message):
         out += command['sym'] + "help -" + command['desc'] + "\n"
     out += "```"
     await client.send_message(message.channel,out)
+  #bot info
   if (('info' in message.content.lower()) and (botid in message.content.lower())):
     out = (
       "```\n"
@@ -102,6 +97,7 @@ async def on_message(message):
       "``` https://github.com/AlexBoyle/BlenderBot"
     )
     await client.send_message(message.channel,out)
+  #purge massages
   if(('purge' in message.content.lower()) and (botid in message.content.lower())):
     deleted = len(await client.purge_from(message.channel, limit=100, check=isme))
     await client.send_message(message.channel,"```" + str(deleted) + " messages deleted```")

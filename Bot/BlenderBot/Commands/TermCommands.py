@@ -4,13 +4,20 @@ import random
 
 class TermCommands:
   searchlist = []
-  commandlist = [['!t', 'search term by number'],['!ts', 'search through terms using a keyword'],['!tr', 'get random term'],
-    ['!r','recall the five most recent terms'],['!ref','shows terms referenced by \'^\' or \'see:\'']]
+  commandlist = [
+    ['!t', 'search term by number'],
+    ['!ts', 'search through terms using a keyword'],
+    ['!tr', 'get random term'],
+    ['!r','recall the five most recent terms'],
+    ['!ref','shows terms referenced by \'^\' or \'see:\'']
+  ]
   isSetup = False
   def __init__(self, server_id):
     try:
       self.service = TermService(server_id)
       self.length = self.service.getLen()
+      if(self.length == None):
+        self.length = 0
       self.isSetup = True
     except Exception as inst:
       print(inst)
@@ -23,7 +30,7 @@ class TermCommands:
       if msg.startswith('add '):
         return self.add(msg[4:])
       if msg.startswith('rm '):
-        return self.remove(msg[3:])
+        return self.rm(msg[3:])
       if msg.startswith('edit '):
         return self.edit(msg[5:])
 
@@ -51,9 +58,15 @@ class TermCommands:
     if msg == 'tr':
       return self.term(str(random.randint(1,self.length)))
   def add(self, msg):
-    return self.service.newTerm(msg)
+    self.service.newTerm(msg)
+    self.length = self.service.getLen()
+    if(self.length == None):
+      self.length = 0
   def rm(self, msg):
-    return self.service.rmTerm(msg)
+    self.service.rmTerm(msg)
+    self.length = self.service.getLen()
+    if(self.length == None):
+      self.length = 0
   def edit(self, msg):
     return self.service.editTerm(1,msg)
   def getTerm(self, num):

@@ -1,9 +1,9 @@
 #https://github.com/csparpa/pyowm
 import pyowm
-
+from Global import *
 
 class WeatherCommands:
-  owm = pyowm.OWM('665d0497ac66c8c8cfd2178807d07f57')
+  owm = pyowm.OWM(weather_token)
   commandlist = [['+wnz', 'get current weather by zip code'],['+wnp', 'get current weather by name (city,country)']]
 
   def run(self, message):
