@@ -1,4 +1,4 @@
-
+Note: This project is decrepit as of 8/01/2017
 # BlenderBot  
 <img src="http://i.imgur.com/5fBK3NV.jpg" width="230"/>  
 
